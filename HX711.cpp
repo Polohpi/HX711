@@ -10,12 +10,9 @@ HX711::HX711()
 }
 
 void HX711::tare() {
-
-    // receive command from serial terminal, send 't' to initiate tare operation:
-  if (Serial.available() > 0) {
+ 
     char inByte = Serial.read();
-    if (inByte == 't') Cell.tareNoDelay();
-  }
+    Cell.tareNoDelay();  
 
   // check if last tare operation is complete:
   if (Cell.getTareStatus() == true) {
