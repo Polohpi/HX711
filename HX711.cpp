@@ -44,18 +44,16 @@ double HX711::read() {
   
 }
 
-void HX711::setup()
+void HX711::setup(double CalibrationVal)
 {
   Cell.begin();
-  calibrationValue = -41.5; // uncomment this if you want to set the calibration value in the sketch
-
   Cell.start(2000, true);
   if (Cell.getTareTimeoutFlag()) {
     Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
     while (1);
   }
   else {
-  Cell.setCalFactor(calibrationValue); // set calibration value (float)
+  Cell.setCalFactor(CalibrationVal); // set calibration value (float)
   }
 }
 
@@ -64,7 +62,8 @@ void HX711::TareNoDelay()
   Cell.tare();
 }
 
-void HX711::Calibrate() {
+void HX711::Calibrate(float CalibrationValue) 
+{
   Serial.println("***");
   Serial.println("Start calibration:");
   
@@ -74,26 +73,30 @@ void HX711::Calibrate() {
   Serial.println("Now, place your known mass on the loadcell.");
   Serial.println("Then send the weight of this mass (i.e. 100.0) from serial monitor.");
 
-  float known_mass = 0;
-  _resume = false;
-  while (_resume == false) {
-    Cell.update();
-    if (Serial.available() > 0) {
-      known_mass = Serial.parseFloat();
-      if (known_mass != 0) {
-        Serial.print("Known mass is: ");
-        Serial.println(known_mass);
-        _resume = true;
-      }
-    }
-  }
+  float known_mass = CalibrationValue;
+  
+//  _resume = false;
+//  while (_resume == false) 
+//  {
+//    Cell.update();
+//    if (Serial.available() > 0) 
+//    {
+//    known_mass = Serial.parseFloat();
+//     if (known_mass != 0) 
+//      {
+//        Serial.print("Known mass is: ");
+//        Serial.println(known_mass);
+//        _resume = true;
+//      }
+//    }
+//  }
 
   Cell.refreshDataSet(); //refresh the dataset to be sure that the known mass is measured correct
-  calibrationValue = Cell.getNewCalibration(known_mass); //get the new calibration value
+  CalibrationValue = Cell.getNewCalibration(known_mass); //get the new calibration value
 
   Serial.print("New calibration value has been set to: ");
-  Serial.print(calibrationValue);
-  Serial.println(", use this as calibration value (calFactor) in your project sketch.");
+  Serial.print(CalibrationValue);
+  Serial.println("Use this as calibration value (calFactor) in your project sketch.");
   Serial.println("End calibration");
   Serial.println("***");
 

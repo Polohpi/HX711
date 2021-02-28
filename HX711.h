@@ -12,11 +12,9 @@ class HX711 {
 
   void tare();
   double read();
-  void setup();
+  void setup(double CalibrationVal);
   void TareNoDelay();
-  void Calibrate();
-
-  float calibrationValue = 0;
+  void Calibrate(float CalibrationValue);
 
 };
 

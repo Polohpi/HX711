@@ -19,6 +19,7 @@
 */
 
 #include <HX711.h>
+float calib = -41.5;
 
 HX711 loadcell = HX711();
 
@@ -26,7 +27,7 @@ void setup() {
   Serial.begin(9600); delay(10);
   Serial.println();
   Serial.println("Starting...");
-  loadcell.setup();
+  loadcell.setup(calib);
   loadcell.tare();
 }
 
@@ -37,7 +38,7 @@ void loop() {
   if (Serial.available() > 0) {
     char inByte = Serial.read();
   if (inByte == 't') loadcell.TareNoDelay();   
-  if (inByte == 'r') loadcell.Calibrate();
+  if (inByte == 'r') loadcell.Calibrate(calib);
   }
   
   delay(200);
